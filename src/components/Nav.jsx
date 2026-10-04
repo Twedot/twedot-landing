@@ -97,19 +97,19 @@ export default function Nav() {
         <a href="mailto:support@twedot.com" className="nav-link nav-support">Support</a>
 
         <a
-          href={PLAY_STORE_URL}
+          href="https://twedot.com"
           target="_blank"
           rel="noopener noreferrer"
           className="nav-download-btn"
           style={{
-            background: 'var(--text)', borderRadius: 24, padding: '9px 22px',
+            background: 'var(--purple)', borderRadius: 24, padding: '9px 22px',
             color: '#fff', fontWeight: 700, fontSize: 14, transition: 'opacity 0.2s',
             textDecoration: 'none', marginLeft: 6,
           }}
           onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
           onMouseLeave={e => e.currentTarget.style.opacity = '1'}
         >
-          Register
+          Open App
         </a>
 
         <div ref={menuRef} style={{ position: 'relative', marginLeft: 4 }}>
