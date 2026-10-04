@@ -1,0 +1,409 @@
+import { useState, useEffect, useRef } from 'react';
+
+// Returns the index of the last milestone whose date has passed
+function getActiveByDate() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  let last = 0;
+  for (let i = 0; i < MILESTONES.length; i++) {
+    const d = MILESTONES[i].date;
+    if (d && d <= today) last = i;
+  }
+  return last;
+}
+
+// Returns 0-100 representing where TODAY falls along the full timeline
+function getTodayPct() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  // Give the open-ended future entry a concrete far date for interpolation
+  const dates = MILESTONES.map(m => m.date || new Date('2026-12-31'));
+  const n = dates.length - 1;
+  if (today <= dates[0]) return 0;
+  if (today >= dates[n]) return 100;
+  for (let i = 0; i < n; i++) {
+    if (today >= dates[i] && today < dates[i + 1]) {
+      const frac = (today - dates[i]) / (dates[i + 1] - dates[i]);
+      return ((i + frac) / n) * 100;
+    }
+  }
+  return 100;
+}
+
+const MILESTONES = [
+  {
+    date: new Date('2025-11-01'),
+    year: 'Nov 2025',
+    title: 'The Problem Became Personal',
+    desc: (
+      <>
+        <p style={{ marginBottom: 12 }}>While trying to find a way to survive financially, we started exploring ideas — a gym wear brand, a sneaker brand, selling shoes from local vendors. But we kept hitting the same wall:</p>
+        <ul style={{ paddingLeft: 20, margin: '0 0 12px' }}>
+          <li>finding reliable local vendors was difficult</li>
+          <li>most platforms required hours of searching</li>
+          <li>responses were slow, and vendors were often too far away</li>
+        </ul>
+        <p>That frustration planted the first seed of what would later become Twedot.</p>
+      </>
+    ),
+    color: '#7c3aed',
+  },
+  {
+    date: new Date('2025-12-01'),
+    year: 'Dec 2025',
+    title: 'The Idea Expanded',
+    desc: (
+      <>
+        <p style={{ marginBottom: 12 }}>We started discussing a bigger problem beyond just fashion vendors. We noticed:</p>
+        <ul style={{ paddingLeft: 20, margin: '0 0 12px' }}>
+          <li>local businesses struggled to get visibility</li>
+          <li>skilled service providers weren't getting enough gigs</li>
+          <li>platforms like Upwork focused mostly on tech</li>
+          <li>LinkedIn felt too corporate for everyday local services</li>
+        </ul>
+        <p>We believed there was a huge untapped market for local commerce — if visibility could be simplified. That month, we officially started building.</p>
+      </>
+    ),
+    color: '#7c3aed',
+  },
+  {
+    date: new Date('2026-04-01'),
+    year: 'Apr 2026',
+    title: 'First Technical Test Launch',
+    desc: (
+      <>
+        <p style={{ marginBottom: 12 }}>After months of planning and development, we reached our first technical test launch. This phase focused on:</p>
+        <ul style={{ paddingLeft: 20, margin: '0 0 12px' }}>
+          <li>testing the core infrastructure</li>
+          <li>validating the concept technically</li>
+          <li>understanding how users would interact with the platform</li>
+        </ul>
+        <p>It was the first real step from idea to product.</p>
+      </>
+    ),
+    color: '#7c3aed',
+  },
+  {
+    date: new Date('2026-05-17'),
+    year: '17 May 2026',
+    title: 'Securing the Brand',
+    desc: 'We officially secured our domain — marking the beginning of establishing the project\'s identity publicly.',
+    color: '#7c3aed',
+    highlight: 'twedot.com',
+  },
+  {
+    date: new Date('2026-05-22'),
+    year: '22 May 2026',
+    title: 'First Non-Technical Test',
+    desc: (
+      <>
+        <p style={{ marginBottom: 12 }}>We entered our first non-technical testing phase. This stage focused on:</p>
+        <ul style={{ paddingLeft: 20, margin: '0 0 12px' }}>
+          <li>user understanding and branding perception</li>
+          <li>market reactions and feature validation</li>
+          <li>gathering feedback outside pure development</li>
+        </ul>
+        <p>The first real test of whether people connected with the vision behind Twedot.</p>
+      </>
+    ),
+    color: '#6d28d9',
+  },
+  {
+    date: new Date('2026-06-27'),
+    year: '27 Jun 2026',
+    title: 'Twedot Goes Live',
+    desc: (
+      <>
+        <p style={{ marginBottom: 12 }}>
+          We don't announce arrivals. We arrive.
+        </p>
+        <p style={{ marginBottom: 12 }}>
+          After months in the shadows — building, testing, refusing to ship anything less than right —
+          Twedot officially hit the Google Play Store. No fanfare. No launch party.
+          Just the product, standing on its own, in the hands of real people for the first time.
+        </p>
+        <p style={{ marginBottom: 12 }}>
+          The streets have been waiting long enough.
+        </p>
+        <p>
+          This isn't a beginning. It's the moment everything we built in silence became loud.
+        </p>
+      </>
+    ),
+    color: '#16a34a',
+    highlight: 'Now on Google Play',
+  },
+  {
+    date: new Date('2026-09-19'),
+    year: '19 Sep 2026',
+    title: 'Rank, Discovery & Earning',
+    desc: (
+      <>
+        <p style={{ marginBottom: 12 }}>A big one: posts can now carry hashtags, mentions, and a tagged location, so they're actually discoverable through Search. Alongside that:</p>
+        <ul style={{ paddingLeft: 20, margin: '0 0 12px' }}>
+          <li>a real Rank system, built from genuine activity across the app</li>
+          <li>profile-view alerts, so you know when someone checks you out</li>
+          <li>the first path to earning money on Twedot, tied directly to your Rank</li>
+        </ul>
+        <p>Full breakdown on the <a href="/withdraw-earnings" style={{ color: '#7c3aed', fontWeight: 700 }}>Ranking & Earnings</a> page.</p>
+      </>
+    ),
+    color: '#7c3aed',
+    highlight: 'Rank is live',
+  },
+  {
+    date: null, year: '2026 →', title: 'The Story Continues',
+    desc: (
+      <>
+        <p style={{ marginBottom: 12 }}>We're actively building. Right now the team is focused on:</p>
+        <ul style={{ paddingLeft: 20, margin: '0 0 12px' }}>
+          <li>expanding vendor discovery features</li>
+          <li>refining the messaging experience</li>
+          <li>growing our early user community</li>
+          <li>preparing for a wider public launch</li>
+        </ul>
+        <p>The next chapter isn't written yet — check back as we hit new milestones.</p>
+      </>
+    ),
+    color: '#4c1d95',
+  },
+];
+
+const TODAY_LABEL = (() => {
+  const d = new Date();
+  return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+})();
+
+export default function Timeline() {
+  const [active, setActive] = useState(getActiveByDate);
+  const [visible, setVisible] = useState(false);
+  const [contentKey, setContentKey] = useState(getActiveByDate);
+  const [todayHover, setTodayHover] = useState(false);
+  const sectionRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setVisible(true); },
+      { threshold: 0.2 }
+    );
+    if (sectionRef.current) observer.observe(sectionRef.current);
+    return () => observer.disconnect();
+  }, []);
+
+  const goTo = (i) => {
+    setActive(i);
+    setContentKey(k => k + 1);
+  };
+
+  const prev = () => goTo(Math.max(0, active - 1));
+  const next = () => goTo(Math.min(MILESTONES.length - 1, active + 1));
+
+  const progressPct = getTodayPct();
+  const m = MILESTONES[active];
+
+  return (
+    <section
+      ref={sectionRef}
+      className="timeline-section"
+      style={{ background: 'transparent', padding: '100px 0', position: 'relative', zIndex: 1 }}
+    >
+      {/* Header */}
+      <div
+        className="timeline-header"
+        style={{
+          display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between',
+          padding: '0 64px', marginBottom: 32, flexWrap: 'wrap', gap: 24,
+          opacity: visible ? 1 : 0, transform: visible ? 'none' : 'translateY(20px)',
+          transition: 'opacity 0.6s ease, transform 0.6s ease',
+        }}
+      >
+        <div>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 16 }}>
+            <div style={{ width: 24, height: 2, background: 'var(--purple)', borderRadius: 2 }} />
+            <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--purple)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>Our Story</span>
+          </div>
+          <h2 style={{ fontSize: 'clamp(32px, 4vw, 56px)', fontWeight: 800, lineHeight: 1.05, letterSpacing: '0px', textTransform: 'uppercase', color: 'var(--text)' }}>
+            BUILT FOR <span style={{ color: 'var(--purple)' }}>PEOPLE.</span>
+          </h2>
+          <p style={{ fontSize: 15, color: 'var(--text-muted)', marginTop: 12, lineHeight: 1.7 }}>
+            The idea was born in November 2025 — here's how it grew.
+          </p>
+        </div>
+
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexShrink: 0 }}>
+          <button className="slide-btn" onClick={prev} disabled={active === 0} aria-label="Previous milestone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)', minWidth: 42, textAlign: 'center' }}>
+            {active + 1} / {MILESTONES.length}
+          </span>
+          <button className="slide-btn" onClick={next} disabled={active === MILESTONES.length - 1} aria-label="Next milestone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div
+        className="timeline-progress"
+        style={{
+          padding: '0 64px', marginBottom: 56,
+          opacity: visible ? 1 : 0,
+          transition: 'opacity 0.6s ease 0.15s',
+        }}
+      >
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+          {/* Track */}
+          <div style={{ position: 'absolute', left: 0, right: 0, top: '50%', transform: 'translateY(-50%)', height: 4, background: 'var(--border)', borderRadius: 4 }} />
+          {/* Fill */}
+          <div style={{ position: 'absolute', left: 0, top: '50%', transform: 'translateY(-50%)', height: 4, background: 'var(--purple)', borderRadius: 4, width: `${progressPct}%`, transition: 'width 0.45s cubic-bezier(0.4,0,0.2,1)' }} />
+          {/* Today marker */}
+          <div
+            style={{ position: 'absolute', left: `${progressPct}%`, top: '50%', transform: 'translate(-50%, -50%)', zIndex: 10 }}
+            onMouseEnter={() => setTodayHover(true)}
+            onMouseLeave={() => setTodayHover(false)}
+            onClick={() => goTo(MILESTONES.length - 1)}
+          >
+            {/* Tooltip */}
+            <div style={{
+              position: 'absolute', bottom: 'calc(100% + 10px)', left: '50%', transform: 'translateX(-50%)',
+              background: '#0a0010', color: '#fff', fontSize: 11, fontWeight: 700,
+              padding: '5px 10px', borderRadius: 8, whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+              opacity: todayHover ? 1 : 0,
+              transition: 'opacity 0.2s',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+            }}>
+              Today · {TODAY_LABEL}
+              {/* Arrow */}
+              <div style={{ position: 'absolute', top: '100%', left: '50%', transform: 'translateX(-50%)', width: 0, height: 0, borderLeft: '5px solid transparent', borderRight: '5px solid transparent', borderTop: '5px solid #0a0010' }} />
+            </div>
+            {/* Marker dot */}
+            <div style={{
+              width: 14, height: 14, borderRadius: '50%',
+              background: '#fff',
+              border: '3px solid var(--purple)',
+              boxShadow: `0 0 0 3px rgba(124,58,237,0.25)${todayHover ? ', 0 0 0 6px rgba(124,58,237,0.12)' : ''}`,
+              transition: 'box-shadow 0.2s',
+              cursor: 'pointer',
+            }} />
+          </div>
+          {/* Dots */}
+          <div style={{ position: 'relative', width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+            {MILESTONES.map((ms, i) => (
+              <button
+                key={i}
+                onClick={() => goTo(i)}
+                aria-label={`Go to ${ms.title}`}
+                style={{
+                  width: i === active ? 28 : 16, height: 16, borderRadius: 8,
+                  background: i <= active ? 'var(--purple)' : 'var(--bg)',
+                  border: `3px solid ${i <= active ? 'var(--purple)' : 'var(--border)'}`,
+                  cursor: 'pointer',
+                  transition: 'all 0.35s cubic-bezier(0.4,0,0.2,1)',
+                  boxShadow: i === active ? '0 0 0 4px rgba(124,58,237,0.2)' : 'none',
+                  padding: 0, flexShrink: 0,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Year labels */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10 }}>
+          {MILESTONES.map((ms, i) => (
+            <button
+              key={i}
+              onClick={() => goTo(i)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+                fontSize: 11, fontWeight: i === active ? 800 : 600,
+                color: i === active ? 'var(--purple)' : 'var(--text-muted)',
+                transition: 'color 0.3s', letterSpacing: '0.02em',
+              }}
+            >
+              {ms.year}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Single active content panel */}
+      <div
+        className="timeline-content"
+        style={{ padding: '0 64px' }}
+      >
+        <div
+          key={contentKey}
+          style={{
+            maxWidth: active === 1 ? 960 : 680,
+            opacity: visible ? 1 : 0,
+            transform: visible ? 'none' : 'translateY(16px)',
+            transition: 'opacity 0.5s ease, transform 0.5s ease',
+            animation: visible ? 'tl-fade-in 0.45s ease forwards' : 'none',
+          }}
+        >
+          <div style={{
+            display: 'inline-block', background: m.color,
+            color: '#fff', borderRadius: 20, padding: '5px 16px',
+            fontSize: 13, fontWeight: 800, marginBottom: 20,
+            letterSpacing: '0.01em',
+          }}>
+            {m.year}
+          </div>
+
+          <div style={{ fontWeight: 800, fontSize: 'clamp(24px, 3.5vw, 46px)', letterSpacing: '0px', color: 'var(--text)', marginBottom: 16, lineHeight: 1.1 }}>
+            {m.title}
+          </div>
+
+          {m.highlight && (
+            <div style={{ fontSize: 'clamp(28px, 5vw, 56px)', fontWeight: 800, color: '#7c3aed', letterSpacing: '0px', lineHeight: 1.1, marginBottom: 20 }}>
+              {m.highlight}
+            </div>
+          )}
+
+          {m.desc && (
+            <div style={{ fontSize: 17, color: 'var(--text-muted)', lineHeight: 1.8, maxWidth: 520 }}>
+              {m.desc}
+            </div>
+          )}
+
+          {active === 1 && (
+            <div style={{
+              display: 'flex', alignItems: 'flex-start', gap: 32, marginTop: 32,
+              flexWrap: 'wrap',
+            }}>
+              <img
+                src="/founders.jpeg"
+                alt="Founders"
+                style={{
+                  width: 220, height: 220, objectFit: 'cover',
+                  borderRadius: 16,
+                  transform: 'rotate(-6deg)',
+                  boxShadow: '0 8px 32px rgba(124,58,237,0.25)',
+                  flexShrink: 0,
+                }}
+              />
+              <div style={{ flex: 1, minWidth: 220 }}>
+                <div style={{ fontSize: 18, fontWeight: 800, color: 'var(--text)', marginBottom: 12, lineHeight: 1.3 }}>
+                  The Team Behind Twedot
+                </div>
+                <p style={{ fontSize: 15, color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: 0 }}>
+                  What started as a personal struggle to find local vendors turned into a mission. A small team united by one frustration —
+                  and one vision: make local commerce as easy as sending a message.
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes tl-fade-in {
+          from { opacity: 0; transform: translateY(14px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+      `}</style>
+    </section>
+  );
+}
