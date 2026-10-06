@@ -21,12 +21,12 @@ export default function FeaturesSection() {
           About us
         </div>
         <h2 style={{ fontSize: 'clamp(32px, 6vw, 68px)', fontWeight: 800, color: '#fff', lineHeight: 1.05, marginBottom: 26 }}>
-          Twedot is an open network where real people connect, share, and thrive.
+          Twedot is the open network for people and businesses.
         </h2>
         <p style={{ fontSize: 17, color: 'rgba(255,255,255,0.8)', lineHeight: 1.7, maxWidth: 620, margin: '0 auto 36px' }}>
-          Share your life on a public feed, connect privately with the people you trust, discover
-          what's happening in your city — and for those who want it, a platform to showcase their
-          work, offer services, and get paid. All of it, in one place.
+          Connect with friends and family, discover people and businesses around you and worldwide.
+          Do business while staying social — see what your friends are up to, what they offer,
+          and what's happening in your city. All of it, in one place.
         </p>
         <a
           href="/about"

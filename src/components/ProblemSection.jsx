@@ -102,7 +102,7 @@ export default function ProblemSection() {
             Everything in one place
           </h2>
           <p style={{ fontSize: 15.5, color: 'var(--text-muted)', marginTop: 10, maxWidth: 460 }}>
-            Social life, private conversations, local discovery, and business — all on one platform built for real people.
+            For people and businesses alike — connect, discover, and do business, all on one platform.
           </p>
         </div>
       </div>

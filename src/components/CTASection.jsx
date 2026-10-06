@@ -7,8 +7,8 @@ import { useInView } from '../hooks/useInView';
 const TABS = {
   social: {
     label: 'Social',
-    heading: 'An open network for real people.',
-    sub: 'Share your life on a public feed, connect privately with anyone on Twedot, and discover what\'s happening in your city — all in one place.',
+    heading: 'The open network for people and businesses.',
+    sub: 'Connect with friends and family, discover people and businesses around you and worldwide — and do business while staying social.',
   },
   local: {
     label: 'Local',

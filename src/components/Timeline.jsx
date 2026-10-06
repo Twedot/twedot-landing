@@ -61,7 +61,7 @@ const MILESTONES = [
           <li>platforms like Upwork focused mostly on tech; LinkedIn felt too corporate</li>
           <li>social media was global noise — nothing felt genuinely local</li>
         </ul>
-        <p>We believed there was room for a platform that brought real people together — socially and practically. That month, we officially started building.</p>
+        <p>We believed there was room for a platform that brought people and businesses together — socially and practically. That month, we officially started building.</p>
       </>
     ),
     color: '#7c3aed',
@@ -120,7 +120,7 @@ const MILESTONES = [
         <p style={{ marginBottom: 12 }}>
           After months in the shadows — building, testing, refusing to ship anything less than right —
           Twedot officially hit the Google Play Store. No fanfare. No launch party.
-          Just the product, standing on its own, in the hands of real people for the first time.
+          Just the product, standing on its own, in the hands of people for the first time.
         </p>
         <p style={{ marginBottom: 12 }}>
           The streets have been waiting long enough.

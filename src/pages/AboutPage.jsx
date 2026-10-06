@@ -74,11 +74,11 @@ export default function AboutPage() {
           color: 'var(--text)', maxWidth: 800,
         }}>
           BUILT FOR<br />
-          <span style={{ color: 'var(--purple)' }}>REAL PEOPLE.</span>
+          <span style={{ color: 'var(--purple)' }}>PEOPLE & BUSINESSES.</span>
         </h1>
 
         <p style={{ fontSize: 17, color: 'var(--text-muted)', marginTop: 24, maxWidth: 520, lineHeight: 1.8 }}>
-          Twedot was built on one belief: that people in the same city, neighbourhood, or street deserve a real place to connect — share moments, showcase what they do, and experience life together.
+          Twedot was built on one belief: that people and businesses deserve a place to exist together online — connect with friends and family, discover what's around you, and do business while staying social.
         </p>
       </section>
 
